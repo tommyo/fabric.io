@@ -1,0 +1,424 @@
+swagger: '2.0'
+info:
+  title: Fabric.io API
+  version: 0.0.1
+host: fabric.io
+paths:
+  "/oauth/token":
+    post:
+      summary: OAuth
+      operationId: OAuth
+      consumes:
+      - application/json
+      parameters:
+      - name: body
+        in: body
+        schema:
+          type: string
+          default: '{"grant_type":"password","scope":"organizations apps issues features account twitter_client_apps beta software answers","username":"email@rambler.ru","password":"pa$$word","client_id":"your_client_id","client_secret":"your_client_secret"}'
+      responses:
+        default:
+          description: stub description for swagger compliance
+      security: []
+  "/api/v2/organizations":
+    get:
+      summary: Get Organization
+      operationId: GetOrganization
+      parameters:
+      - name: Authorization
+        required: false
+        in: header
+        default: Bearer {access_token}
+        type: string
+        enum:
+        - Bearer {access_token}
+        x-title: Authorization
+      responses:
+        default:
+          description: stub description for swagger compliance
+      security: []
+  "/api/v2/apps":
+    get:
+      summary: Get All Apps
+      operationId: GetAllApps
+      parameters:
+      - name: Authorization
+        required: false
+        in: header
+        default: Bearer {access_token}
+        type: string
+        enum:
+        - Bearer {access_token}
+        x-title: Authorization
+      responses:
+        default:
+          description: stub description for swagger compliance
+      security: []
+  "/api/v2/apps/{app_id}":
+    get:
+      summary: Get Single App
+      operationId: GetSingleApp
+      parameters:
+      - name: Authorization
+        required: false
+        in: header
+        default: Bearer {access_token}
+        type: string
+        enum:
+        - Bearer {access_token}
+        x-title: Authorization
+      - name: app_id
+        required: true
+        in: path
+        type: string
+      responses:
+        default:
+          description: stub description for swagger compliance
+      security: []
+  "/api/v2/organizations/{ResponseBodyPath}/apps/{app_id}/growth_analytics/active_now.json":
+    get:
+      summary: Get Active Now
+      operationId: GetActiveNow
+      parameters:
+      - name: ResponseBodyPath
+        required: true
+        in: path
+        default: "{organization_id}"
+        type: string
+        x-title: ResponseBodyPath
+      - name: Authorization
+        required: false
+        in: header
+        default: Bearer {access_token}
+        type: string
+        enum:
+        - Bearer {access_token}
+        x-title: Authorization
+      - name: build
+        required: false
+        in: query
+        default: all
+        type: string
+        enum:
+        - all
+        x-title: build
+      - name: app_id
+        required: true
+        in: path
+        type: string
+      responses:
+        default:
+          description: stub description for swagger compliance
+      security: []
+  "/api/v2/organizations/{ResponseBodyPath}/apps/{app_id}/growth_analytics/daily_new.json":
+    get:
+      summary: Get Daily New
+      operationId: GetDailyNew
+      parameters:
+      - name: ResponseBodyPath
+        required: true
+        in: path
+        default: "{organization_id}"
+        type: string
+        x-title: ResponseBodyPath
+      - name: Authorization
+        required: false
+        in: header
+        default: Bearer {access_token}
+        type: string
+        enum:
+        - Bearer {access_token}
+        x-title: Authorization
+      - name: start
+        required: false
+        in: query
+        default: '1478736000'
+        type: string
+        enum:
+        - '1478736000'
+        x-title: start
+      - name: end
+        required: false
+        in: query
+        default: '1481328000'
+        type: string
+        enum:
+        - '1481328000'
+        x-title: end
+      - name: build
+        required: false
+        in: query
+        default: all
+        type: string
+        enum:
+        - all
+        x-title: build
+      - name: app_id
+        required: true
+        in: path
+        type: string
+      responses:
+        default:
+          description: stub description for swagger compliance
+      security: []
+  "/api/v2/organizations/{ResponseBodyPath}/apps/{app_id}/growth_analytics/daily_active.json":
+    get:
+      summary: Get Daily Active
+      operationId: GetDailyActive
+      parameters:
+      - name: ResponseBodyPath
+        required: true
+        in: path
+        default: "{organization_id}"
+        type: string
+        x-title: ResponseBodyPath
+      - name: Authorization
+        required: false
+        in: header
+        default: Bearer {access_token}
+        type: string
+        enum:
+        - Bearer {access_token}
+        x-title: Authorization
+      - name: start
+        required: false
+        in: query
+        default: '1478736000'
+        type: string
+        enum:
+        - '1478736000'
+        x-title: start
+      - name: end
+        required: false
+        in: query
+        default: '1481328000'
+        type: string
+        enum:
+        - '1481328000'
+        x-title: end
+      - name: build
+        required: false
+        in: query
+        default: 3.0.4 (71)
+        type: string
+        enum:
+        - 3.0.4 (71)
+        x-title: build
+      - name: app_id
+        required: true
+        in: path
+        type: string
+      responses:
+        default:
+          description: stub description for swagger compliance
+      security: []
+  "/graphql":
+    post:
+      x-host: api-dash.fabric.io
+      summary: Get OOM
+      operationId: GetOOM
+      consumes:
+      - application/json
+      parameters:
+      - name: Authorization
+        required: false
+        in: header
+        default: Bearer {access_token}
+        type: string
+        enum:
+        - Bearer {access_token}
+        x-title: Authorization
+      - name: body
+        in: body
+        schema:
+          type: string
+          default: |-
+            {
+              "query": "query oomCountForDaysForBuild($app_id: String!, $builds: [String!]!, $days: Int!) { project(externalId: $app_id) { crashlytics{ oomCounts(builds: $builds, days: $days){ timeSeries{ allTimeCount } } oomSessionCounts(builds: $builds, days: $days){ timeSeries{ allTimeCount } } } } }",
+              "variables": {
+                "app_id": "{app_id}",
+                "days": 1,
+                "builds": [
+                  "3.0.4 (71)"
+                ]
+              }
+            }
+      responses:
+        default:
+          description: stub description for swagger compliance
+      security: []
+  "/api/v2/organizations/{ResponseBodyPath}/apps/{app_id}/growth_analytics/total_sessions_scalar.json":
+    get:
+      summary: Get Sessions Count
+      operationId: GetSessionCount
+      consumes:
+      - text/plain
+      parameters:
+      - name: ResponseBodyPath
+        required: true
+        in: path
+        default: "{organization_id}"
+        type: string
+        x-title: ResponseBodyPath
+      - name: Authorization
+        required: false
+        in: header
+        default: Bearer {access_token}
+        type: string
+        enum:
+        - Bearer {access_token}
+        x-title: Authorization
+      - name: build
+        required: false
+        in: query
+        default: all
+        type: string
+        enum:
+        - all
+        x-title: build
+      - name: start
+        required: false
+        in: query
+        default: '1480636800'
+        type: string
+        enum:
+        - '1480636800'
+        x-title: start
+      - name: end
+        required: false
+        in: query
+        default: '1480723200'
+        type: string
+        enum:
+        - '1480723200'
+        x-title: end
+      - name: app_id
+        required: true
+        in: path
+        type: string
+      responses:
+        default:
+          description: stub description for swagger compliance
+      security: []
+  "/api/v2/organizations/{ResponseBodyPath}/apps/{app_id}/beta_distribution/releases/{release_id}":
+    get:
+      summary: Get All Builds
+      operationId: GetAllBuilds
+      consumes:
+      - text/plain
+      parameters:
+      - name: ResponseBodyPath
+        required: true
+        in: path
+        default: "{organization_id}"
+        type: string
+        x-title: ResponseBodyPath
+      - name: Authorization
+        required: false
+        in: header
+        default: Bearer {access_token}
+        type: string
+        enum:
+        - Bearer {access_token}
+        x-title: Authorization
+      - name: app_id
+        required: true
+        in: path
+        type: string
+      - name: release_id
+        required: true
+        in: path
+        type: string
+      responses:
+        default:
+          description: stub description for swagger compliance
+      security: []
+  "/api/v2/organizations/{ResponseBodyPath}/apps/{app_id}/beta_distribution/releases":
+    get:
+      summary: Get Single Build
+      operationId: GetSingleBuild
+      parameters:
+      - name: ResponseBodyPath
+        required: true
+        in: path
+        default: "{organization_id}"
+        type: string
+        x-title: ResponseBodyPath
+      - name: Authorization
+        required: false
+        in: header
+        default: Bearer {access_token}
+        type: string
+        enum:
+        - Bearer {access_token}
+        x-title: Authorization
+      - name: app[display_version]
+        required: false
+        in: query
+        default: 3.0.5
+        type: string
+        enum:
+        - 3.0.5
+        x-title: app[display_version]
+      - name: app[build_version]
+        required: false
+        in: query
+        default: '75'
+        type: string
+        enum:
+        - '75'
+        x-title: app[build_version]
+      - name: app_id
+        required: true
+        in: path
+        type: string
+      responses:
+        default:
+          description: stub description for swagger compliance
+      security: []
+  "/api/v2/organizations/{ResponseBodyPath}/apps/{app_id}/growth_analytics/top_builds":
+    get:
+      summary: Get Top Builds
+      operationId: GetTopBuilds
+      parameters:
+      - name: ResponseBodyPath
+        required: true
+        in: path
+        default: "{organization_id}"
+        type: string
+        x-title: ResponseBodyPath
+      - name: Authorization
+        required: false
+        in: header
+        default: Bearer {access_token}
+        type: string
+        enum:
+        - Bearer {access_token}
+        x-title: Authorization
+      - name: start
+        required: false
+        in: query
+        default: '0'
+        type: string
+        enum:
+        - '0'
+        x-title: start
+      - name: app_id
+        required: true
+        in: path
+        type: string
+      - name: end
+        required: false
+        in: query
+        default: '1481328000'
+        type: string
+        enum:
+        - '1481328000'
+        x-title: end
+      responses:
+        default:
+          description: stub description for swagger compliance
+      security: []
+schemes:
+- https
+securityDefinitions: {}

@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   title: Fabric.io API
-  version: 0.0.1
+  version: 0.0.2
 host: fabric.io
 paths:
   "/oauth/token":
@@ -14,8 +14,20 @@ paths:
       - name: body
         in: body
         schema:
-          type: string
-          default: '{"grant_type":"password","scope":"organizations apps issues features account twitter_client_apps beta software answers","username":"email@rambler.ru","password":"pa$$word","client_id":"your_client_id","client_secret":"your_client_secret"}'
+          type: object
+          properties:
+            grant_type:
+              type: string
+            scope:
+              type: string
+            username:
+              type: string
+            password:
+              type: string
+            client_id:
+              type: string
+            client_secret:
+              type: string
       responses:
         default:
           description: stub description for swagger compliance

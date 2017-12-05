@@ -16,6 +16,8 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	"github.com/TommyO/fabric.io/models"
 )
 
 // NewOAuthParams creates a new OAuthParams object
@@ -63,7 +65,7 @@ for the o auth operation typically these are written to a http.Request
 type OAuthParams struct {
 
 	/*Body*/
-	Body *string
+	Body *models.OAuthParamsBody
 
 	timeout    time.Duration
 	Context    context.Context
@@ -104,13 +106,13 @@ func (o *OAuthParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithBody adds the body to the o auth params
-func (o *OAuthParams) WithBody(body *string) *OAuthParams {
+func (o *OAuthParams) WithBody(body *models.OAuthParamsBody) *OAuthParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the o auth params
-func (o *OAuthParams) SetBody(body *string) {
+func (o *OAuthParams) SetBody(body *models.OAuthParamsBody) {
 	o.Body = body
 }
 

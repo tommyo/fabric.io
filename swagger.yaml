@@ -1,12 +1,12 @@
 swagger: '2.0'
 info:
   title: Fabric.io API
-  version: 0.0.2
+  version: 0.0.3
 host: fabric.io
 paths:
   "/oauth/token":
     post:
-      summary: OAuth
+      summary: Get Authorization Token
       operationId: OAuth
       consumes:
       - application/json
@@ -28,409 +28,563 @@ paths:
               type: string
             client_secret:
               type: string
+          required:
+            - grant_type
+            - scope
+            - username
+            - password
+            - client_id
+            - client_secret
       responses:
-        default:
-          description: stub description for swagger compliance
+        200:
+          description: OAuth token and refresh token
+          schema:
+            type: object
+            properties:
+              access_token:
+                type: string
+              token_type:
+                type: string
+              expires_in:
+                type: integer
+              refresh_token:
+                type: string
+              scope:
+                type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              error_description:
+                type: string
+              status:
+                type: string
       security: []
+  # "/api/v3/projects/{app_id}/answers_csv/{report}_csv":
+  #   get:
+  #     summary: Various metrics reports
+  #     operationId: Report
+  #     parameters:
+  #       - $ref: "#/parameters/Authorization"
+  #       - $ref: "#/parameters/app_id"
+  #       - name: report
+  #         required: true
+  #         in: path
+  #         type: string
+  #         enum:
+  #           - dwmau
+  #           - sessions_over_segments
+  #           - time_in_app_per_dau_by_segments
+  #       - $ref: "#/parameters/start"
+  #       - $ref: "#/parameters/end"
+  #       - $ref: "#/parameters/build"
+  #     produces:
+  #       - text/csv
+  #     responses:
+  #       200:
+  #         description: A CSV report
+  #         schema:
+  #           type: string
+  #     security: []
   "/api/v2/organizations":
     get:
-      summary: Get Organization
-      operationId: GetOrganization
+      summary: Get Organizations
+      operationId: Organizations
       parameters:
-      - name: Authorization
-        required: false
-        in: header
-        default: Bearer {access_token}
-        type: string
-        enum:
-        - Bearer {access_token}
-        x-title: Authorization
+        - $ref: "#/parameters/Authorization"
+      produces:
+        - text/json
       responses:
-        default:
-          description: stub description for swagger compliance
+        200:
+          description: all organizations details
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Organization"
       security: []
   "/api/v2/apps":
     get:
       summary: Get All Apps
-      operationId: GetAllApps
+      operationId: Apps
       parameters:
-      - name: Authorization
-        required: false
-        in: header
-        default: Bearer {access_token}
-        type: string
-        enum:
-        - Bearer {access_token}
-        x-title: Authorization
+        - $ref: "#/parameters/Authorization"
       responses:
-        default:
-          description: stub description for swagger compliance
+        200:
+          description: all apps details
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/App"
       security: []
   "/api/v2/apps/{app_id}":
     get:
       summary: Get Single App
-      operationId: GetSingleApp
+      operationId: App
       parameters:
-      - name: Authorization
-        required: false
-        in: header
-        default: Bearer {access_token}
-        type: string
-        enum:
-        - Bearer {access_token}
-        x-title: Authorization
-      - name: app_id
-        required: true
-        in: path
-        type: string
+        - $ref: "#/parameters/Authorization"
+        - $ref: "#/parameters/app_id"
       responses:
-        default:
-          description: stub description for swagger compliance
+        200:
+          description: app details
+          schema:
+            $ref: "#/definitions/App"
       security: []
-  "/api/v2/organizations/{ResponseBodyPath}/apps/{app_id}/growth_analytics/active_now.json":
+  "/api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/active_now.json":
     get:
       summary: Get Active Now
-      operationId: GetActiveNow
+      operationId: ActiveNow
       parameters:
-      - name: ResponseBodyPath
-        required: true
-        in: path
-        default: "{organization_id}"
-        type: string
-        x-title: ResponseBodyPath
-      - name: Authorization
-        required: false
-        in: header
-        default: Bearer {access_token}
-        type: string
-        enum:
-        - Bearer {access_token}
-        x-title: Authorization
-      - name: build
-        required: false
-        in: query
-        default: all
-        type: string
-        enum:
-        - all
-        x-title: build
-      - name: app_id
-        required: true
-        in: path
-        type: string
+        - $ref: "#/parameters/Authorization"
+        - $ref: "#/parameters/organization_id"
+        - $ref: "#/parameters/app_id"
+        - $ref: "#/parameters/build"
+      produces:
+        - text/json
       responses:
-        default:
-          description: stub description for swagger compliance
+        200:
+          description: Report
+          schema:
+            allOf:
+              - type: object
+                x-name: values
+                properties:
+                  cardinality:
+                    type: integer
+                  timestamp:
+                    type: integer
+              - $ref: "#/definitions/DeltaReport"
       security: []
-  "/api/v2/organizations/{ResponseBodyPath}/apps/{app_id}/growth_analytics/daily_new.json":
+  "/api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/daily_new.json":
     get:
       summary: Get Daily New
-      operationId: GetDailyNew
+      operationId: DailyNew
       parameters:
-      - name: ResponseBodyPath
-        required: true
-        in: path
-        default: "{organization_id}"
-        type: string
-        x-title: ResponseBodyPath
-      - name: Authorization
-        required: false
-        in: header
-        default: Bearer {access_token}
-        type: string
-        enum:
-        - Bearer {access_token}
-        x-title: Authorization
-      - name: start
-        required: false
-        in: query
-        default: '1478736000'
-        type: string
-        enum:
-        - '1478736000'
-        x-title: start
-      - name: end
-        required: false
-        in: query
-        default: '1481328000'
-        type: string
-        enum:
-        - '1481328000'
-        x-title: end
-      - name: build
-        required: false
-        in: query
-        default: all
-        type: string
-        enum:
-        - all
-        x-title: build
-      - name: app_id
-        required: true
-        in: path
-        type: string
+        - $ref: "#/parameters/Authorization"
+        - $ref: "#/parameters/organization_id"
+        - $ref: "#/parameters/app_id"
+        - $ref: "#/parameters/start"
+        - $ref: "#/parameters/end"
+        - $ref: "#/parameters/build"
       responses:
-        default:
-          description: stub description for swagger compliance
+        200:
+          description: Report
+          schema:
+            allOf:
+              - $ref: "#/definitions/BasicReport"
+              - $ref: "#/definitions/ModelReport"
+              - $ref: "#/definitions/DeltaReport"
+              - $ref: "#/definitions/SeriesDateInt"
       security: []
-  "/api/v2/organizations/{ResponseBodyPath}/apps/{app_id}/growth_analytics/daily_active.json":
+  "/api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/{period}_active.json":
     get:
-      summary: Get Daily Active
-      operationId: GetDailyActive
+      summary: Get Daily, Weekly, or Monthly Active
+      operationId: Active
       parameters:
-      - name: ResponseBodyPath
-        required: true
-        in: path
-        default: "{organization_id}"
-        type: string
-        x-title: ResponseBodyPath
-      - name: Authorization
-        required: false
-        in: header
-        default: Bearer {access_token}
-        type: string
-        enum:
-        - Bearer {access_token}
-        x-title: Authorization
-      - name: start
-        required: false
-        in: query
-        default: '1478736000'
-        type: string
-        enum:
-        - '1478736000'
-        x-title: start
-      - name: end
-        required: false
-        in: query
-        default: '1481328000'
-        type: string
-        enum:
-        - '1481328000'
-        x-title: end
-      - name: build
-        required: false
-        in: query
-        default: 3.0.4 (71)
-        type: string
-        enum:
-        - 3.0.4 (71)
-        x-title: build
-      - name: app_id
-        required: true
-        in: path
-        type: string
-      responses:
-        default:
-          description: stub description for swagger compliance
-      security: []
-  "/graphql":
-    post:
-      x-host: api-dash.fabric.io
-      summary: Get OOM
-      operationId: GetOOM
-      consumes:
-      - application/json
-      parameters:
-      - name: Authorization
-        required: false
-        in: header
-        default: Bearer {access_token}
-        type: string
-        enum:
-        - Bearer {access_token}
-        x-title: Authorization
-      - name: body
-        in: body
-        schema:
+        - $ref: "#/parameters/Authorization"
+        - $ref: "#/parameters/organization_id"
+        - $ref: "#/parameters/app_id"
+        - $ref: "#/parameters/start"
+        - $ref: "#/parameters/end"
+        - $ref: "#/parameters/build"
+        # - $ref: "#/parameters/transformation"
+        - name: period
           type: string
-          default: |-
-            {
-              "query": "query oomCountForDaysForBuild($app_id: String!, $builds: [String!]!, $days: Int!) { project(externalId: $app_id) { crashlytics{ oomCounts(builds: $builds, days: $days){ timeSeries{ allTimeCount } } oomSessionCounts(builds: $builds, days: $days){ timeSeries{ allTimeCount } } } } }",
-              "variables": {
-                "app_id": "{app_id}",
-                "days": 1,
-                "builds": [
-                  "3.0.4 (71)"
-                ]
-              }
-            }
+          in: path
+          required: true
+          enum: [daily, weekly, monthly]
       responses:
-        default:
-          description: stub description for swagger compliance
+        200:
+          description: Report
+          schema:
+            allOf:
+              - $ref: "#/definitions/BasicReport"
+              - $ref: "#/definitions/ModelReport"
+              - $ref: "#/definitions/DeltaReport"
+              - $ref: "#/definitions/SeriesDateInt"
       security: []
-  "/api/v2/organizations/{ResponseBodyPath}/apps/{app_id}/growth_analytics/total_sessions_scalar.json":
+  # "/api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/user_sessions_timeseries.json":
+  #   get:
+  #     summary: Get Session info
+  #     operationId: Sessions
+  #     parameters:
+  #       - $ref: "#/parameters/Authorization"
+  #       - $ref: "#/parameters/organization_id"
+  #       - $ref: "#/parameters/app_id"
+  #       - $ref: "#/parameters/start"
+  #       - $ref: "#/parameters/end"
+  #       - $ref: "#/parameters/build"
+  #       - $ref: "#/parameters/transformation"
+  #     responses:
+  #       200:
+  #         description: Report
+  #         schema:
+  #           allOf:
+  #             - $ref: "#/definitions/BasicReport"
+  #             - $ref: "#/definitions/ModelReport"
+  #             - $ref: "#/definitions/DeltaReport"
+  #             - $ref: "#/definitions/SeriesDateNumber"
+  "/api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/time_in_app_per_dau.json":
+    get:
+      summary: Time in app per user
+      operationId: TimeInApp
+      parameters:
+        - $ref: "#/parameters/Authorization"
+        - $ref: "#/parameters/organization_id"
+        - $ref: "#/parameters/app_id"
+        - $ref: "#/parameters/start"
+        - $ref: "#/parameters/end"
+        - $ref: "#/parameters/build"
+        # - $ref: "#/parameters/transformation"
+      responses:
+        200:
+          description: Report
+          schema:
+            allOf:
+              - $ref: "#/definitions/BasicReport"
+              - $ref: "#/definitions/ModelReport"
+              - $ref: "#/definitions/DeltaReport"
+              - $ref: "#/definitions/SeriesDateNumber"
+  # "/graphql":
+  #   post:
+  #     x-host: api-dash.fabric.io
+  #     summary: Get OOM
+  #     operationId: OOM
+  #     consumes:
+  #     - application/json
+  #     parameters:
+  #     - $ref: "#/parameters/Authorization"
+  #     - name: body
+  #       in: body
+  #       schema:
+  #         type: string
+  #         default: |-
+  #           {
+  #             "query": "query oomCountForDaysForBuild($app_id: String!, $builds: [String!]!, $days: Int!) { project(externalId: $app_id) { crashlytics{ oomCounts(builds: $builds, days: $days){ timeSeries{ allTimeCount } } oomSessionCounts(builds: $builds, days: $days){ timeSeries{ allTimeCount } } } } }",
+  #             "variables": {
+  #               "app_id": "{app_id}",
+  #               "days": 1,
+  #               "builds": [
+  #                 "3.0.4 (71)"
+  #               ]
+  #             }
+  #           }
+  #     responses:
+  #       default:
+  #         description: stub description for swagger compliance
+  #     security: []
+  "/api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/total_sessions_scalar.json":
     get:
       summary: Get Sessions Count
-      operationId: GetSessionCount
+      operationId: SessionsCount
       consumes:
       - text/plain
       parameters:
-      - name: ResponseBodyPath
-        required: true
-        in: path
-        default: "{organization_id}"
-        type: string
-        x-title: ResponseBodyPath
-      - name: Authorization
-        required: false
-        in: header
-        default: Bearer {access_token}
-        type: string
-        enum:
-        - Bearer {access_token}
-        x-title: Authorization
-      - name: build
-        required: false
-        in: query
-        default: all
-        type: string
-        enum:
-        - all
-        x-title: build
-      - name: start
-        required: false
-        in: query
-        default: '1480636800'
-        type: string
-        enum:
-        - '1480636800'
-        x-title: start
-      - name: end
-        required: false
-        in: query
-        default: '1480723200'
-        type: string
-        enum:
-        - '1480723200'
-        x-title: end
-      - name: app_id
-        required: true
-        in: path
-        type: string
+        - $ref: "#/parameters/Authorization"
+        - $ref: "#/parameters/organization_id"
+        - $ref: "#/parameters/app_id"
+        - $ref: "#/parameters/build"
+        - $ref: "#/parameters/start"
+        - $ref: "#/parameters/end"
       responses:
-        default:
-          description: stub description for swagger compliance
+        200:
+          description: Report
+          schema:
+            type: object
+            properties:
+              sessions:
+                type: integer
+              start:
+                type: integer
+              end:
+                type: integer
+              app_id:
+                type: string
+              builds:
+                type: array
+                items:
+                  type: string
       security: []
-  "/api/v2/organizations/{ResponseBodyPath}/apps/{app_id}/beta_distribution/releases/{release_id}":
-    get:
-      summary: Get All Builds
-      operationId: GetAllBuilds
-      consumes:
-      - text/plain
-      parameters:
-      - name: ResponseBodyPath
-        required: true
-        in: path
-        default: "{organization_id}"
-        type: string
-        x-title: ResponseBodyPath
-      - name: Authorization
-        required: false
-        in: header
-        default: Bearer {access_token}
-        type: string
-        enum:
-        - Bearer {access_token}
-        x-title: Authorization
-      - name: app_id
-        required: true
-        in: path
-        type: string
-      - name: release_id
-        required: true
-        in: path
-        type: string
-      responses:
-        default:
-          description: stub description for swagger compliance
-      security: []
-  "/api/v2/organizations/{ResponseBodyPath}/apps/{app_id}/beta_distribution/releases":
-    get:
-      summary: Get Single Build
-      operationId: GetSingleBuild
-      parameters:
-      - name: ResponseBodyPath
-        required: true
-        in: path
-        default: "{organization_id}"
-        type: string
-        x-title: ResponseBodyPath
-      - name: Authorization
-        required: false
-        in: header
-        default: Bearer {access_token}
-        type: string
-        enum:
-        - Bearer {access_token}
-        x-title: Authorization
-      - name: app[display_version]
-        required: false
-        in: query
-        default: 3.0.5
-        type: string
-        enum:
-        - 3.0.5
-        x-title: app[display_version]
-      - name: app[build_version]
-        required: false
-        in: query
-        default: '75'
-        type: string
-        enum:
-        - '75'
-        x-title: app[build_version]
-      - name: app_id
-        required: true
-        in: path
-        type: string
-      responses:
-        default:
-          description: stub description for swagger compliance
-      security: []
-  "/api/v2/organizations/{ResponseBodyPath}/apps/{app_id}/growth_analytics/top_builds":
-    get:
-      summary: Get Top Builds
-      operationId: GetTopBuilds
-      parameters:
-      - name: ResponseBodyPath
-        required: true
-        in: path
-        default: "{organization_id}"
-        type: string
-        x-title: ResponseBodyPath
-      - name: Authorization
-        required: false
-        in: header
-        default: Bearer {access_token}
-        type: string
-        enum:
-        - Bearer {access_token}
-        x-title: Authorization
-      - name: start
-        required: false
-        in: query
-        default: '0'
-        type: string
-        enum:
-        - '0'
-        x-title: start
-      - name: app_id
-        required: true
-        in: path
-        type: string
-      - name: end
-        required: false
-        in: query
-        default: '1481328000'
-        type: string
-        enum:
-        - '1481328000'
-        x-title: end
-      responses:
-        default:
-          description: stub description for swagger compliance
-      security: []
+  # "/api/v2/organizations/{organization_id}/apps/{app_id}/beta_distribution/releases/{release_id}":
+  #   get:
+  #     summary: Get All Builds
+  #     operationId: AllBuilds
+  #     consumes:
+  #     - text/plain
+  #     parameters:
+  #       - $ref: "#/parameters/Authorization"
+  #       - $ref: "#/parameters/organization_id"
+  #       - $ref: "#/parameters/app_id"
+  #       - name: release_id
+  #         required: true
+  #         in: path
+  #         type: string
+  #     responses:
+  #       default:
+  #         description: stub description for swagger compliance
+  #     security: []
+  # "/api/v2/organizations/{organization_id}/apps/{app_id}/beta_distribution/releases":
+  #   get:
+  #     summary: Get Single Build
+  #     operationId: SingleBuild
+  #     parameters:
+  #       - $ref: "#/parameters/Authorization"
+  #       - $ref: "#/parameters/organization_id"
+  #       - $ref: "#/parameters/app_id"
+  #       - name: app[display_version]
+  #         required: false
+  #         in: query
+  #         default: 3.0.5
+  #         type: string
+  #         enum:
+  #         - 3.0.5
+  #       - name: app[build_version]
+  #         required: false
+  #         in: query
+  #         default: '75'
+  #         type: string
+  #         enum:
+  #         - '75'
+  #     responses:
+  #       default:
+  #         description: stub description for swagger compliance
+  #     security: []
+  # "/api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/top_builds":
+  #   get:
+  #     summary: Get Top Builds
+  #     operationId: TopBuilds
+  #     parameters:
+  #       - $ref: "#/parameters/Authorization"
+  #       - $ref: "#/parameters/organization_id"
+  #       - $ref: "#/parameters/app_id"
+  #       - $ref: "#/parameters/start"
+  #       - $ref: "#/parameters/end"
+  #     responses:
+  #       default:
+  #         description: stub description for swagger compliance
+  #     security: []
 schemes:
-- https
+  - https
 securityDefinitions: {}
+parameters:
+  Authorization:
+    name: Authorization
+    required: true
+    in: header
+    type: string
+  organization_id:
+    name: organization_id
+    required: true
+    in: path
+    type: string
+  app_id:
+    name: app_id
+    required: true
+    in: path
+    type: string
+  days_since_epoch:
+    name: days_since_epoch
+    required: false
+    in: query
+    type: number
+  start:
+    name: start
+    required: false
+    in: query
+    type: number
+  end:
+    name: end
+    required: false
+    in: query
+    type: number
+  build:
+    name: build
+    required: false
+    in: query
+    type: string
+    default: all
+  transformation:
+    name: transformation
+    required: false
+    in: query
+    type: string
+    enum: [seasonal, weighted]
+definitions:
+  Organization:
+    type: object
+    properties:
+      id:
+        type: string
+      alias:
+        type: string
+      name:
+        type: string
+      api_key:
+        type: string
+      enrollments:
+        type: object # {"beta_distribution":"true","answers_enhanced_feature_set_enabled_for_new_apps":"false","answers_ip_address_tracking_enabled_for_new_apps":"true"}
+      accounts_count:
+        type: integer
+      mopub_id:
+        type: string
+      sdk_organization:
+        type: boolean
+      apps_counts:
+        type: object # {"ios":3,"android":3}
+      build_secret:
+        type: string
+  App:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      bundle_identifier:
+        type: string
+      base_identifier:
+        type: string
+      collect_analytics:
+        type: boolean
+      created_at:
+        type: string
+      analytics_app_has_received_data:
+        type: boolean
+      analytics_forward_to_google_analytics:
+        type: boolean
+      analytics_include_purchase_events_in_forwarded_events:
+        type: boolean
+      platform:
+        type: string
+      status:
+        type: string
+      latest_build:
+        type: string
+      icon_url:
+        type: string
+      icon_hash:
+        type: string
+      kit_versions:
+        type: string
+      sdk_kits:
+        type: string
+      map_of_available_products:
+        type: object
+      icon32_url:
+        type: string
+      icon64_url:
+        type: string
+      icon128_url:
+        type: string
+      accounts_count:
+        type: integer
+      organization_id:
+        type: string
+      watched:
+        type: integer
+      importance_level:
+        type: integer
+      dashboard_url:
+        type: string
+      impacted_devices_count:
+        type: integer
+      unresolved_issues_count:
+        type: integer
+      crashes_count:
+        type: integer
+  SeriesDateNumber:
+    type: object
+    properties:
+      series:
+        type: array
+        items:
+          type: array
+          items:
+            - type: integer
+              x-nullable: false
+            - type: number
+              x-nullable: false
+  SeriesDateInt:
+    type: object
+    properties:
+      series:
+        type: array
+        items:
+          type: array
+          items:
+            - type: integer
+              x-nullable: false
+            - type: integer
+              x-nullable: false
+  BasicReport:
+    type: object
+    properties:
+      start:
+        type: integer
+      end:
+        type: integer
+      app_id:
+        type: string
+      build:
+        type: string
+  ModelReport:
+    type: object
+    properties:
+      model:
+        type: string
+      osversion:
+        type: string
+  DeltaReport:
+    type: object
+    properties:
+      deltas:
+        type: object
+        properties:
+          week_over_week:
+            type: object
+            properties:
+              delta_fraction:
+                type: number
+              last_week_value:
+                type: number
+# existing
+# /api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/active_now.json
+# /api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/daily_new.json
+# /api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/daily_active.json
+# /api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/total_sessions_scalar.json
+# /api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/top_build.json
+#
+# Retention
+# /api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/dau_history.json?
+#   days_since_epoch=17507
+#   build=all
+# /api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/retention.json?
+#   start=1510012800
+#   end=1512604800
+#   metric=all
+#   transformation=seasonal
+# https://api-dash.fabric.io/graphql?relayDebugName=Project_selector_AccountRelayQL
+#
+# engagement
+# /api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/total_time_history.json?
+#   days_since_epoch=17507
+# /api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/wau_cohort_sessions.json?
+#   start=1510012800
+#   end=1512518400
+
+# /api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/sessions_over_dau.json?
+
+#   start=1510012800
+#   end=1512604800
+#   transformation=seasonal
+#   build=all
+
+# /api/v2/organizations/{organization_id}/apps/{app_id}/growth_analytics/time_in_app_per_dau.json?
+
+#   start=1510012800
+#   end=1512604800
+#   transformation=seasonal
+#   build=all
+#

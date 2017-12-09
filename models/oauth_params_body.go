@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // OAuthParamsBody o auth params body
@@ -17,31 +18,121 @@ import (
 type OAuthParamsBody struct {
 
 	// client id
-	ClientID string `json:"client_id,omitempty"`
+	// Required: true
+	ClientID *string `json:"client_id"`
 
 	// client secret
-	ClientSecret string `json:"client_secret,omitempty"`
+	// Required: true
+	ClientSecret *string `json:"client_secret"`
 
 	// grant type
-	GrantType string `json:"grant_type,omitempty"`
+	// Required: true
+	GrantType *string `json:"grant_type"`
 
 	// password
-	Password string `json:"password,omitempty"`
+	// Required: true
+	Password *string `json:"password"`
 
 	// scope
-	Scope string `json:"scope,omitempty"`
+	// Required: true
+	Scope *string `json:"scope"`
 
 	// username
-	Username string `json:"username,omitempty"`
+	// Required: true
+	Username *string `json:"username"`
 }
 
 // Validate validates this o auth params body
 func (m *OAuthParamsBody) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateClientID(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateClientSecret(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateGrantType(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validatePassword(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateScope(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateUsername(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *OAuthParamsBody) validateClientID(formats strfmt.Registry) error {
+
+	if err := validate.Required("client_id", "body", m.ClientID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *OAuthParamsBody) validateClientSecret(formats strfmt.Registry) error {
+
+	if err := validate.Required("client_secret", "body", m.ClientSecret); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *OAuthParamsBody) validateGrantType(formats strfmt.Registry) error {
+
+	if err := validate.Required("grant_type", "body", m.GrantType); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *OAuthParamsBody) validatePassword(formats strfmt.Registry) error {
+
+	if err := validate.Required("password", "body", m.Password); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *OAuthParamsBody) validateScope(formats strfmt.Registry) error {
+
+	if err := validate.Required("scope", "body", m.Scope); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *OAuthParamsBody) validateUsername(formats strfmt.Registry) error {
+
+	if err := validate.Required("username", "body", m.Username); err != nil {
+		return err
+	}
+
 	return nil
 }
 

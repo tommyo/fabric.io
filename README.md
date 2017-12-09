@@ -9,7 +9,11 @@ There is a possibility that in some point of time it may break. Use at your own 
 
 ## Rebuilding
 
-To rebuild, get the [swagger tool](https://github.com/go-swagger/go-swagger) and run:
+To rebuild, get the [go-swagger tool](https://github.com/go-swagger/go-swagger) and run:
 ```
-swagger generate client -c fabric
+swagger generate client
 ```
+
+## The future
+
+I *may* run against the [oag tool](https://github.com/jbowes/oag) in the near future.

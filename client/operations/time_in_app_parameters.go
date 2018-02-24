@@ -82,11 +82,11 @@ type TimeInAppParams struct {
 	/*Build*/
 	Build *string
 	/*End*/
-	End *float64
+	End *int64
 	/*OrganizationID*/
 	OrganizationID string
 	/*Start*/
-	Start *float64
+	Start *int64
 
 	timeout    time.Duration
 	Context    context.Context
@@ -160,13 +160,13 @@ func (o *TimeInAppParams) SetBuild(build *string) {
 }
 
 // WithEnd adds the end to the time in app params
-func (o *TimeInAppParams) WithEnd(end *float64) *TimeInAppParams {
+func (o *TimeInAppParams) WithEnd(end *int64) *TimeInAppParams {
 	o.SetEnd(end)
 	return o
 }
 
 // SetEnd adds the end to the time in app params
-func (o *TimeInAppParams) SetEnd(end *float64) {
+func (o *TimeInAppParams) SetEnd(end *int64) {
 	o.End = end
 }
 
@@ -182,13 +182,13 @@ func (o *TimeInAppParams) SetOrganizationID(organizationID string) {
 }
 
 // WithStart adds the start to the time in app params
-func (o *TimeInAppParams) WithStart(start *float64) *TimeInAppParams {
+func (o *TimeInAppParams) WithStart(start *int64) *TimeInAppParams {
 	o.SetStart(start)
 	return o
 }
 
 // SetStart adds the start to the time in app params
-func (o *TimeInAppParams) SetStart(start *float64) {
+func (o *TimeInAppParams) SetStart(start *int64) {
 	o.Start = start
 }
 
@@ -229,11 +229,11 @@ func (o *TimeInAppParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 	if o.End != nil {
 
 		// query param end
-		var qrEnd float64
+		var qrEnd int64
 		if o.End != nil {
 			qrEnd = *o.End
 		}
-		qEnd := swag.FormatFloat64(qrEnd)
+		qEnd := swag.FormatInt64(qrEnd)
 		if qEnd != "" {
 			if err := r.SetQueryParam("end", qEnd); err != nil {
 				return err
@@ -250,11 +250,11 @@ func (o *TimeInAppParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 	if o.Start != nil {
 
 		// query param start
-		var qrStart float64
+		var qrStart int64
 		if o.Start != nil {
 			qrStart = *o.Start
 		}
-		qStart := swag.FormatFloat64(qrStart)
+		qStart := swag.FormatInt64(qrStart)
 		if qStart != "" {
 			if err := r.SetQueryParam("start", qStart); err != nil {
 				return err

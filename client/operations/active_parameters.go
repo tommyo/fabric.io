@@ -82,13 +82,13 @@ type ActiveParams struct {
 	/*Build*/
 	Build *string
 	/*End*/
-	End *float64
+	End *int64
 	/*OrganizationID*/
 	OrganizationID string
 	/*Period*/
 	Period string
 	/*Start*/
-	Start *float64
+	Start *int64
 
 	timeout    time.Duration
 	Context    context.Context
@@ -162,13 +162,13 @@ func (o *ActiveParams) SetBuild(build *string) {
 }
 
 // WithEnd adds the end to the active params
-func (o *ActiveParams) WithEnd(end *float64) *ActiveParams {
+func (o *ActiveParams) WithEnd(end *int64) *ActiveParams {
 	o.SetEnd(end)
 	return o
 }
 
 // SetEnd adds the end to the active params
-func (o *ActiveParams) SetEnd(end *float64) {
+func (o *ActiveParams) SetEnd(end *int64) {
 	o.End = end
 }
 
@@ -195,13 +195,13 @@ func (o *ActiveParams) SetPeriod(period string) {
 }
 
 // WithStart adds the start to the active params
-func (o *ActiveParams) WithStart(start *float64) *ActiveParams {
+func (o *ActiveParams) WithStart(start *int64) *ActiveParams {
 	o.SetStart(start)
 	return o
 }
 
 // SetStart adds the start to the active params
-func (o *ActiveParams) SetStart(start *float64) {
+func (o *ActiveParams) SetStart(start *int64) {
 	o.Start = start
 }
 
@@ -242,11 +242,11 @@ func (o *ActiveParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regist
 	if o.End != nil {
 
 		// query param end
-		var qrEnd float64
+		var qrEnd int64
 		if o.End != nil {
 			qrEnd = *o.End
 		}
-		qEnd := swag.FormatFloat64(qrEnd)
+		qEnd := swag.FormatInt64(qrEnd)
 		if qEnd != "" {
 			if err := r.SetQueryParam("end", qEnd); err != nil {
 				return err
@@ -268,11 +268,11 @@ func (o *ActiveParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regist
 	if o.Start != nil {
 
 		// query param start
-		var qrStart float64
+		var qrStart int64
 		if o.Start != nil {
 			qrStart = *o.Start
 		}
-		qStart := swag.FormatFloat64(qrStart)
+		qStart := swag.FormatInt64(qrStart)
 		if qStart != "" {
 			if err := r.SetQueryParam("start", qStart); err != nil {
 				return err

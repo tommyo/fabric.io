@@ -393,12 +393,12 @@ parameters:
     name: start
     required: false
     in: query
-    type: number
+    type: integer
   end:
     name: end
     required: false
     in: query
-    type: number
+    type: integer
   build:
     name: build
     required: false

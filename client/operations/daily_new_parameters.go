@@ -82,11 +82,11 @@ type DailyNewParams struct {
 	/*Build*/
 	Build *string
 	/*End*/
-	End *float64
+	End *int64
 	/*OrganizationID*/
 	OrganizationID string
 	/*Start*/
-	Start *float64
+	Start *int64
 
 	timeout    time.Duration
 	Context    context.Context
@@ -160,13 +160,13 @@ func (o *DailyNewParams) SetBuild(build *string) {
 }
 
 // WithEnd adds the end to the daily new params
-func (o *DailyNewParams) WithEnd(end *float64) *DailyNewParams {
+func (o *DailyNewParams) WithEnd(end *int64) *DailyNewParams {
 	o.SetEnd(end)
 	return o
 }
 
 // SetEnd adds the end to the daily new params
-func (o *DailyNewParams) SetEnd(end *float64) {
+func (o *DailyNewParams) SetEnd(end *int64) {
 	o.End = end
 }
 
@@ -182,13 +182,13 @@ func (o *DailyNewParams) SetOrganizationID(organizationID string) {
 }
 
 // WithStart adds the start to the daily new params
-func (o *DailyNewParams) WithStart(start *float64) *DailyNewParams {
+func (o *DailyNewParams) WithStart(start *int64) *DailyNewParams {
 	o.SetStart(start)
 	return o
 }
 
 // SetStart adds the start to the daily new params
-func (o *DailyNewParams) SetStart(start *float64) {
+func (o *DailyNewParams) SetStart(start *int64) {
 	o.Start = start
 }
 
@@ -229,11 +229,11 @@ func (o *DailyNewParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regi
 	if o.End != nil {
 
 		// query param end
-		var qrEnd float64
+		var qrEnd int64
 		if o.End != nil {
 			qrEnd = *o.End
 		}
-		qEnd := swag.FormatFloat64(qrEnd)
+		qEnd := swag.FormatInt64(qrEnd)
 		if qEnd != "" {
 			if err := r.SetQueryParam("end", qEnd); err != nil {
 				return err
@@ -250,11 +250,11 @@ func (o *DailyNewParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regi
 	if o.Start != nil {
 
 		// query param start
-		var qrStart float64
+		var qrStart int64
 		if o.Start != nil {
 			qrStart = *o.Start
 		}
-		qStart := swag.FormatFloat64(qrStart)
+		qStart := swag.FormatInt64(qrStart)
 		if qStart != "" {
 			if err := r.SetQueryParam("start", qStart); err != nil {
 				return err
